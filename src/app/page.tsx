@@ -1,7 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 import { RatingIcon, RatingColors, surveyQuestions, ratingScale } from './survey.config';
 
 type SurveyFormData = {
@@ -29,8 +28,13 @@ const tailwindColorMap: { [key: string]: string } = {
 };
 
 function HomeInner() {
-  const searchParams = useSearchParams();
-  const uid = searchParams.get('uid') || 'anonymous_user';
+
+  const [uid, setUid] = useState('anonymous_user');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setUid(params.get('uid') || 'anonymous_user');
+  }, []);
 
   const [formData, setFormData] = useState<SurveyFormData>(initialFormData);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

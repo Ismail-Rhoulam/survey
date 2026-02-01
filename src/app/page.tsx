@@ -73,10 +73,7 @@ function HomeInner() {
       });
 
       if (response.ok) {
-        alert('Merci pour vos commentaires! Votre soumission a été enregistrée.');
-        setFormData(initialFormData);
-        setCurrentQuestionIndex(0);
-        setProgress(0);
+        window.location.href = '/thank-you';
       } else {
         const errorData = await response.json();
         alert(`Erreur lors de la soumission: ${errorData.message}`);

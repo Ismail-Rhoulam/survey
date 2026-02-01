@@ -20,19 +20,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-gray-900 text-gray-200">
         <div className="min-h-screen flex flex-col">
           {/* Header: keep it compact */}
-          <header className="h-24 flex items-center justify-center border-b border-gray-800">
+          <header className="h-16 flex items-center justify-center border-b border-gray-800">
             <Image
-              src="/logo.png"   // or /logo.svg
+              src="/logo.png"
               alt="Ophelia"
               width={160}
               height={48}
               priority
-              className="h-12 w-auto opacity-95"
+              className="h-10 w-auto opacity-95"
             />
           </header>
 
           {/* Main: takes remaining height and centers page content */}
-          <main className="flex-1 flex items-center justify-center p-4">
+          <main className="flex-1 flex justify-center items-start p-4 pt-8">
             {children}
           </main>
         </div>

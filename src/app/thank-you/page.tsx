@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function ThankYouPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-900 p-4">
+    <div className="w-full flex items-center justify-center">
       <main className="w-full max-w-2xl p-10 sm:p-14 bg-gray-900 rounded-3xl
                        shadow-[0_0_20px_rgba(0,0,0,0.5)] text-center">
 

@@ -91,7 +91,7 @@ export default function Home() {
   const isLastQuestion = currentQuestionIndex === surveyQuestions.length - 1;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-900 p-4">
+    <div className="w-full flex items-center justify-center">
       <main className="w-full max-w-3xl p-8 sm:p-12 bg-gray-900 rounded-3xl shadow-[0_0_20px_rgba(0,0,0,0.5)]">
         <h1 className="text-4xl font-bold text-center mb-4 text-gray-200">
           Enquête de Satisfaction

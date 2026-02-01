@@ -1,4 +1,3 @@
-// src/app/layout.tsx
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import Image from "next/image";
@@ -15,26 +14,28 @@ export const metadata: Metadata = {
   description: "A satisfaction survey with a 3D neumorphic theme.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={poppins.variable}>
-      <body className="bg-gray-900 text-gray-200">
-        {/* Global header */}
-        <header className="flex justify-center py-8">
-          <Image
-            src="/logo.svg"
-            alt="Company logo"
-            width={140}
-            height={40}
-            priority
-          />
-        </header>
+      <body className="min-h-screen bg-gray-900 text-gray-200">
+        <div className="min-h-screen flex flex-col">
+          {/* Header: keep it compact */}
+          <header className="h-24 flex items-center justify-center border-b border-gray-800">
+            <Image
+              src="/logo.png"   // or /logo.svg
+              alt="Ophelia"
+              width={160}
+              height={48}
+              priority
+              className="h-12 w-auto opacity-95"
+            />
+          </header>
 
-        {children}
+          {/* Main: takes remaining height and centers page content */}
+          <main className="flex-1 flex items-center justify-center p-4">
+            {children}
+          </main>
+        </div>
       </body>
     </html>
   );

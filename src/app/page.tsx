@@ -114,7 +114,7 @@ function HomeInner() {
         <form onSubmit={handleSubmit} className="space-y-12">
           <div key={currentQuestion.id}>
             <p className="mb-6 text-xl font-light text-gray-300">{currentQuestion.label}</p>
-            <div className="flex flex-wrap justify-center items-center gap-4">
+            <div className="flex flex-wrap text-center justify-center items-center gap-4">
               {ratingScale.map((ratingValue) => {
                 const isSelected = ratingValue === formData[currentQuestion.name];
 

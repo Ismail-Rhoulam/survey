@@ -14,12 +14,9 @@ export default function ThankYouPage() {
         {/* Message */}
         <p className="text-lg text-gray-400 mb-10 leading-relaxed">
           Nous vous remercions pour le temps consacré à la complétion de cette enquête.
-          <br />
+          <br /><br />
           Les informations recueillies contribueront à l’amélioration continue de nos formations.
         </p>
-
-        {/* Divider */}
-        <div className="w-full h-px bg-gray-800 mb-10" />
       </main>
     </div>
   );

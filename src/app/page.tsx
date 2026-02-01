@@ -1,10 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { RatingIcon, RatingColors, surveyQuestions, ratingScale } from './survey.config';
 
 type SurveyFormData = {
-  [K in typeof surveyQuestions[number]['name']]: number;
+  [K in (typeof surveyQuestions)[number]['name']]: number;
 };
 
 const initialFormData: SurveyFormData = surveyQuestions.reduce((acc, q) => {
@@ -91,112 +92,125 @@ export default function Home() {
   const isLastQuestion = currentQuestionIndex === surveyQuestions.length - 1;
 
   return (
-    <div className="w-full flex items-center justify-center">
-      <main className="w-full max-w-3xl p-8 sm:p-12 bg-gray-900 rounded-3xl shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-        <h1 className="text-4xl font-bold text-center mb-4 text-gray-200">
-          Enquête de Satisfaction
-        </h1>
-        <p className="text-center text-gray-400 mb-12">
-          Vos retours contribuent à l’amélioration continue de nos formations.
-        </p>
+    <div className="min-h-screen w-full flex justify-center px-4 pt-14 bg-gray-900">
+      <div className="w-full max-w-3xl flex flex-col items-center">
+        {/* Logo */}
+        <Image
+          src="/logo.png"
+          alt="Ophelia"
+          width={120}
+          height={120}
+          priority
+          className="mb-10 opacity-95"
+        />
 
-        <div className="w-full bg-gray-900 rounded-full h-4 shadow-[inset_8px_8px_16px_#0c0f1a,inset_-8px_-8px_16px_#162134] mb-12">
-          <div
-            className="h-4 rounded-full transition-all duration-500 ease-in-out"
-            style={{
-              width: `${progress}%`,
-              background: isComplete
-                ? 'linear-gradient(to right, #22c55e, #16a34a)'
-                : 'linear-gradient(to right, #3b82f6, #2563eb)',
-            }}
-          />
-        </div>
+        {/* Card */}
+        <main className="w-full p-8 sm:p-12 bg-gray-900 rounded-3xl shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+          <h1 className="text-4xl font-bold text-center mb-4 text-gray-200">
+            Enquête de Satisfaction
+          </h1>
+          <p className="text-center text-gray-400 mb-12">
+            Vos retours contribuent à l’amélioration continue de nos formations.
+          </p>
 
-        <form onSubmit={handleSubmit} className="space-y-12">
-          <div key={currentQuestion.id}>
-            <p className="mb-6 text-xl font-light text-gray-300">{currentQuestion.label}</p>
+          <div className="w-full bg-gray-900 rounded-full h-4 shadow-[inset_8px_8px_16px_#0c0f1a,inset_-8px_-8px_16px_#162134] mb-12">
+            <div
+              className="h-4 rounded-full transition-all duration-500 ease-in-out"
+              style={{
+                width: `${progress}%`,
+                background: isComplete
+                  ? 'linear-gradient(to right, #22c55e, #16a34a)'
+                  : 'linear-gradient(to right, #3b82f6, #2563eb)',
+              }}
+            />
+          </div>
 
-            <div className="flex flex-wrap text-center justify-center items-center gap-4">
-              {ratingScale.map((ratingValue) => {
-                const isSelected = ratingValue === formData[currentQuestion.name];
+          <form onSubmit={handleSubmit} className="space-y-12">
+            <div key={currentQuestion.id}>
+              <p className="mb-6 text-xl font-light text-gray-300">{currentQuestion.label}</p>
 
-                let buttonClasses =
-                  'w-12 h-12 rounded-full transition-all duration-200 ease-in-out flex items-center justify-center border-2';
-                let iconColorClasses = 'text-gray-200 text-lg';
-                let currentBorderColor = tailwindColorMap['gray-800'];
+              <div className="flex flex-wrap text-center justify-center items-center gap-4">
+                {ratingScale.map((ratingValue) => {
+                  const isSelected = ratingValue === formData[currentQuestion.name];
 
-                if (isSelected) {
-                  const selectedColorClass = RatingColors[ratingValue - 1];
-                  const colorName = selectedColorClass.replace('text-', '');
-                  currentBorderColor = tailwindColorMap[colorName] || 'currentColor';
+                  let buttonClasses =
+                    'w-12 h-12 rounded-full transition-all duration-200 ease-in-out flex items-center justify-center border-2';
+                  let iconColorClasses = 'text-gray-200 text-lg';
+                  let currentBorderColor = tailwindColorMap['gray-800'];
 
-                  buttonClasses +=
-                    ' bg-gray-900 shadow-[inset_6px_6px_12px_#0c0f1a,inset_-6px_-6px_12px_#162134]';
-                  iconColorClasses += ` ${selectedColorClass}`;
-                } else {
-                  buttonClasses +=
-                    ' bg-gray-900 shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] hover:shadow-[1px_1px_2px_#0c0f1a,-1px_-1px_2px_#162134]';
-                }
+                  if (isSelected) {
+                    const selectedColorClass = RatingColors[ratingValue - 1];
+                    const colorName = selectedColorClass.replace('text-', '');
+                    currentBorderColor = tailwindColorMap[colorName] || 'currentColor';
 
-                return (
-                  <button
-                    type="button"
-                    key={ratingValue}
-                    className={buttonClasses}
-                    style={{ borderColor: currentBorderColor }}
-                    onClick={() => handleRating(currentQuestion.name, ratingValue)}
-                  >
-                    <RatingIcon rating={ratingValue} className={iconColorClasses} />
-                  </button>
-                );
-              })}
+                    buttonClasses +=
+                      ' bg-gray-900 shadow-[inset_6px_6px_12px_#0c0f1a,inset_-6px_-6px_12px_#162134]';
+                    iconColorClasses += ` ${selectedColorClass}`;
+                  } else {
+                    buttonClasses +=
+                      ' bg-gray-900 shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] hover:shadow-[1px_1px_2px_#0c0f1a,-1px_-1px_2px_#162134]';
+                  }
+
+                  return (
+                    <button
+                      type="button"
+                      key={ratingValue}
+                      className={buttonClasses}
+                      style={{ borderColor: currentBorderColor }}
+                      onClick={() => handleRating(currentQuestion.name, ratingValue)}
+                    >
+                      <RatingIcon rating={ratingValue} className={iconColorClasses} />
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          <div className="flex justify-between mt-10">
-            {currentQuestionIndex > 0 ? (
-              <button
-                type="button"
-                onClick={handlePrevious}
-                className="min-w-[120px] py-3 px-6 rounded-full font-bold transition-all duration-150 ease-in-out
-                           bg-gray-900 text-gray-200 border-2 border-gray-800 shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134]
-                           hover:shadow-[1px_1px_2px_#0c0f1a,-1px_-1px_2px_#162134]
-                           disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Précédent
-              </button>
-            ) : (
-              <div className="py-3 px-6" />
-            )}
+            <div className="flex justify-between mt-10">
+              {currentQuestionIndex > 0 ? (
+                <button
+                  type="button"
+                  onClick={handlePrevious}
+                  className="min-w-[120px] py-3 px-6 rounded-full font-bold transition-all duration-150 ease-in-out
+                             bg-gray-900 text-gray-200 border-2 border-gray-800 shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134]
+                             hover:shadow-[1px_1px_2px_#0c0f1a,-1px_-1px_2px_#162134]
+                             disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Précédent
+                </button>
+              ) : (
+                <div className="py-3 px-6" />
+              )}
 
-            {isLastQuestion ? (
-              <button
-                type="submit"
-                className={`min-w-[120px] py-3 px-6 text-lg font-bold rounded-full transition-all duration-150 ease-in-out ${
-                  isComplete
-                    ? 'bg-blue-500 text-white shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] hover:bg-blue-600 active:scale-[0.98] active:shadow-none'
-                    : 'bg-gray-900 text-gray-600 shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] cursor-not-allowed opacity-50'
-                }`}
-                disabled={!isComplete}
-              >
-                Soumettre
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={!isCurrentQuestionAnswered}
-                className="min-w-[120px] py-3 px-6 rounded-full font-bold transition-all duration-150 ease-in-out
-                           bg-blue-500 text-white shadow-[6px_6px_12px_0c0f1a,-6px_-6px_12px_#162134]
-                           hover:bg-blue-600 active:scale-[0.98] active:shadow-none
-                           disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Suivant
-              </button>
-            )}
-          </div>
-        </form>
-      </main>
+              {isLastQuestion ? (
+                <button
+                  type="submit"
+                  className={`min-w-[120px] py-3 px-6 text-lg font-bold rounded-full transition-all duration-150 ease-in-out ${
+                    isComplete
+                      ? 'bg-blue-500 text-white shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] hover:bg-blue-600 active:scale-[0.98] active:shadow-none'
+                      : 'bg-gray-900 text-gray-600 shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] cursor-not-allowed opacity-50'
+                  }`}
+                  disabled={!isComplete}
+                >
+                  Soumettre
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={!isCurrentQuestionAnswered}
+                  className="min-w-[120px] py-3 px-6 rounded-full font-bold transition-all duration-150 ease-in-out
+                             bg-blue-500 text-white shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134]
+                             hover:bg-blue-600 active:scale-[0.98] active:shadow-none
+                             disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Suivant
+                </button>
+              )}
+            </div>
+          </form>
+        </main>
+      </div>
     </div>
   );
 }

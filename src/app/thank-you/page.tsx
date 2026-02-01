@@ -9,7 +9,7 @@ export default function ThankYouPage() {
       <div className="w-full max-w-2xl flex flex-col items-center">
         {/* Logo */}
         <Image
-          src="/logo.png"
+          src="/logo.svg"
           alt="Ophelia"
           width={120}
           height={120}

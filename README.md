@@ -125,9 +125,8 @@ Workflow:
 
 ## 📜 License
 
-This project is currently unlicensed.
-
-Add a `LICENSE` file (for example, **MIT**) to define usage and distribution rights.
+This project is licensed under the **MIT License**.
+See the [LICENSE](LICENSE) file for details.
 
 ---
 

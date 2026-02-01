@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {/* Header: keep it compact */}
           <header className="h-16 flex items-center justify-center border-b border-gray-800">
             <Image
-              src="/logo.png"
+              src="/logo.svg"
               alt="Ophelia"
               width={160}
               height={48}

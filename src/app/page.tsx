@@ -165,7 +165,19 @@ export default function Home() {
             />
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-12">
+          <form
+            onSubmit={handleSubmit}
+            onKeyDown={(e) => {
+              // Prevent Enter key from submitting the form unless it's on a button
+              if (e.key === 'Enter') {
+                const target = e.target as HTMLElement;
+                if (target.tagName !== 'BUTTON') {
+                  e.preventDefault();
+                }
+              }
+            }}
+            className="space-y-12"
+          >
             <div key={currentQuestion.id}>
               <p className="mb-6 text-xl font-light text-gray-300">{currentQuestion.label}</p>
 
@@ -173,12 +185,6 @@ export default function Home() {
                 <textarea
                   value={formData.free_text}
                   onChange={(e) => handleTextInput('free_text', e.target.value)}
-                  onKeyDown={(e) => {
-                    // Prevent form submission on Enter key
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.stopPropagation();
-                    }
-                  }}
                   placeholder="Votre réponse (optionnel)"
                   rows={6}
                   className="w-full p-4 rounded-2xl bg-gray-900 text-gray-200 border-2 border-gray-800

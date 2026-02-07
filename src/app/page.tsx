@@ -5,13 +5,20 @@ import React, { useEffect, useState } from 'react';
 import { RatingIcon, RatingColors, surveyQuestions, ratingScale } from './survey.config';
 
 type SurveyFormData = {
-  [K in (typeof surveyQuestions)[number]['name']]: number;
+  contenu: number;
+  intervenants: number;
+  organisation: number;
+  nps: number;
+  free_text: string;
 };
 
-const initialFormData: SurveyFormData = surveyQuestions.reduce((acc, q) => {
-  acc[q.name] = 0;
-  return acc;
-}, {} as SurveyFormData);
+const initialFormData: SurveyFormData = {
+  contenu: 0,
+  intervenants: 0,
+  organisation: 0,
+  nps: 0,
+  free_text: '',
+};
 
 // Tailwind color to hex map (using common values for illustration)
 const tailwindColorMap: { [key: string]: string } = {
@@ -42,11 +49,17 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const completedQuestionsCount = Object.values(formData).filter((v) => v > 0).length;
-    setProgress((completedQuestionsCount / surveyQuestions.length) * 100);
+    // Only count the first 4 rating questions for progress (free_text is optional)
+    const ratingQuestions = ['contenu', 'intervenants', 'organisation', 'nps'] as const;
+    const completedQuestionsCount = ratingQuestions.filter((key) => formData[key] > 0).length;
+    setProgress((completedQuestionsCount / ratingQuestions.length) * 100);
   }, [formData]);
 
   const handleRating = (name: keyof typeof formData, value: number) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleTextInput = (name: keyof typeof formData, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -88,7 +101,10 @@ export default function Home() {
   };
 
   const isComplete = progress === 100;
-  const isCurrentQuestionAnswered = formData[currentQuestion.name] > 0;
+  const isFreeTextQuestion = currentQuestion.name === 'free_text';
+  const isCurrentQuestionAnswered = isFreeTextQuestion
+    ? true // free_text is optional, always allow navigation
+    : (formData[currentQuestion.name] as number) > 0;
   const isLastQuestion = currentQuestionIndex === surveyQuestions.length - 1;
 
   return (
@@ -129,41 +145,54 @@ export default function Home() {
             <div key={currentQuestion.id}>
               <p className="mb-6 text-xl font-light text-gray-300">{currentQuestion.label}</p>
 
-              <div className="flex flex-wrap text-center justify-center items-center gap-4">
-                {ratingScale.map((ratingValue) => {
-                  const isSelected = ratingValue === formData[currentQuestion.name];
+              {isFreeTextQuestion ? (
+                <textarea
+                  value={formData.free_text}
+                  onChange={(e) => handleTextInput('free_text', e.target.value)}
+                  placeholder="Votre réponse (optionnel)"
+                  rows={6}
+                  className="w-full p-4 rounded-2xl bg-gray-900 text-gray-200 border-2 border-gray-800
+                             shadow-[inset_6px_6px_12px_#0c0f1a,inset_-6px_-6px_12px_#162134]
+                             focus:outline-none focus:border-blue-500 transition-all duration-200
+                             placeholder-gray-600 resize-none"
+                />
+              ) : (
+                <div className="flex flex-wrap text-center justify-center items-center gap-4">
+                  {ratingScale.map((ratingValue) => {
+                    const isSelected = ratingValue === formData[currentQuestion.name];
 
-                  let buttonClasses =
-                    'w-12 h-12 rounded-full transition-all duration-200 ease-in-out flex items-center justify-center border-2';
-                  let iconColorClasses = 'text-gray-200 text-lg';
-                  let currentBorderColor = tailwindColorMap['gray-800'];
+                    let buttonClasses =
+                      'w-12 h-12 rounded-full transition-all duration-200 ease-in-out flex items-center justify-center border-2';
+                    let iconColorClasses = 'text-gray-200 text-lg';
+                    let currentBorderColor = tailwindColorMap['gray-800'];
 
-                  if (isSelected) {
-                    const selectedColorClass = RatingColors[ratingValue - 1];
-                    const colorName = selectedColorClass.replace('text-', '');
-                    currentBorderColor = tailwindColorMap[colorName] || 'currentColor';
+                    if (isSelected) {
+                      const selectedColorClass = RatingColors[ratingValue - 1];
+                      const colorName = selectedColorClass.replace('text-', '');
+                      currentBorderColor = tailwindColorMap[colorName] || 'currentColor';
 
-                    buttonClasses +=
-                      ' bg-gray-900 shadow-[inset_6px_6px_12px_#0c0f1a,inset_-6px_-6px_12px_#162134]';
-                    iconColorClasses += ` ${selectedColorClass}`;
-                  } else {
-                    buttonClasses +=
-                      ' bg-gray-900 shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] hover:shadow-[1px_1px_2px_#0c0f1a,-1px_-1px_2px_#162134]';
-                  }
+                      buttonClasses +=
+                        ' bg-gray-900 shadow-[inset_6px_6px_12px_#0c0f1a,inset_-6px_-6px_12px_#162134]';
+                      iconColorClasses += ` ${selectedColorClass}`;
+                    } else {
+                      buttonClasses +=
+                        ' bg-gray-900 shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] hover:shadow-[1px_1px_2px_#0c0f1a,-1px_-1px_2px_#162134]';
+                    }
 
-                  return (
-                    <button
-                      type="button"
-                      key={ratingValue}
-                      className={buttonClasses}
-                      style={{ borderColor: currentBorderColor }}
-                      onClick={() => handleRating(currentQuestion.name, ratingValue)}
-                    >
-                      <RatingIcon rating={ratingValue} className={iconColorClasses} />
-                    </button>
-                  );
-                })}
-              </div>
+                    return (
+                      <button
+                        type="button"
+                        key={ratingValue}
+                        className={buttonClasses}
+                        style={{ borderColor: currentBorderColor }}
+                        onClick={() => handleRating(currentQuestion.name as 'contenu' | 'intervenants' | 'organisation' | 'nps', ratingValue)}
+                      >
+                        <RatingIcon rating={ratingValue} className={iconColorClasses} />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="flex justify-between mt-10">

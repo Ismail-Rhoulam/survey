@@ -31,18 +31,24 @@ export const surveyQuestions = [
     {
       id: 'intervenants',
       name: 'intervenants' as const,
-      label: 'Comment évaluez-vous la qualité globale du ou des intervenant(s), au regard de leur expertise théorique, de leur expérience pratique et de leur maîtrise clinique ?',
+      label: "Comment évaluez-vous la qualité globale du ou des intervenant(s), au regard de leur expertise théorique, de leur expérience pratique et de leur maîtrise clinique ?",
     },
     {
       id: 'organisation',
       name: 'organisation' as const,
-      label: 'Comment appréciez-vous l’organisation générale et le déroulement de la formation, notamment en termes de logistique, de rythme et de supports pédagogiques ?',
+      label: "Comment appréciez-vous l’organisation générale et le déroulement de la formation, notamment en termes de logistique, de rythme et de supports pédagogiques ?",
     },
     {
       id: 'nps',
       name: 'nps' as const,
-      label: 'Dans quelle mesure recommanderiez-vous une formation de l’Institut Ophelia à un confrère médecin-dentiste ?',
+      label: "Dans quelle mesure recommanderiez-vous une formation de l’Institut Ophelia à un confrère médecin-dentiste ?",
     },
+    {
+      id: 'free_text',
+      name: 'free_text' as const,
+      label: "Souhaitez-vous formuler des observations, suggestions ou commentaires complémentaires concernant cette formation, afin de contribuer à l’amélioration continue de nos actions pédagogiques ?",
+    },
+
 ];
 
 export const ratingScale = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];

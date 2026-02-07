@@ -9,8 +9,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "3D Satisfaction Survey",
-  description: "A satisfaction survey with a 3D neumorphic theme.",
+  title: "Enquête de satisfaction",
+  description: "Partagez votre expérience. Votre avis nous aide à améliorer nos services et votre navigation.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

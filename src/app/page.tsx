@@ -49,10 +49,13 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Only count the first 4 rating questions for progress (free_text is optional)
+    // Count all completed questions including free_text if it has content
     const ratingQuestions = ['contenu', 'intervenants', 'organisation', 'nps'] as const;
-    const completedQuestionsCount = ratingQuestions.filter((key) => formData[key] > 0).length;
-    setProgress((completedQuestionsCount / ratingQuestions.length) * 100);
+    const completedRatingCount = ratingQuestions.filter((key) => formData[key] > 0).length;
+    const freeTextCompleted = formData.free_text.trim().length > 0 ? 1 : 0;
+
+    const totalCompleted = completedRatingCount + freeTextCompleted;
+    setProgress((totalCompleted / surveyQuestions.length) * 100);
   }, [formData]);
 
   const handleRating = (name: keyof typeof formData, value: number) => {
@@ -100,12 +103,20 @@ export default function Home() {
     }
   };
 
-  const isComplete = progress === 100;
   const isFreeTextQuestion = currentQuestion.name === 'free_text';
   const isCurrentQuestionAnswered = isFreeTextQuestion
     ? true // free_text is optional, always allow navigation
     : (formData[currentQuestion.name] as number) > 0;
   const isLastQuestion = currentQuestionIndex === surveyQuestions.length - 1;
+
+  // Allow submit if all required questions (first 4) are completed and user is on the last question
+  const allRequiredQuestionsCompleted = (
+    formData.contenu > 0 &&
+    formData.intervenants > 0 &&
+    formData.organisation > 0 &&
+    formData.nps > 0
+  );
+  const canSubmit = isLastQuestion && allRequiredQuestionsCompleted;
 
   return (
     <div className="min-h-screen w-full flex justify-center px-4 pt-14 bg-gray-900">
@@ -134,7 +145,7 @@ export default function Home() {
               className="h-4 rounded-full transition-all duration-500 ease-in-out"
               style={{
                 width: `${progress}%`,
-                background: isComplete
+                background: progress === 100
                   ? 'linear-gradient(to right, #22c55e, #16a34a)'
                   : 'linear-gradient(to right, #3b82f6, #2563eb)',
               }}
@@ -215,11 +226,11 @@ export default function Home() {
                 <button
                   type="submit"
                   className={`min-w-[120px] py-3 px-6 text-lg font-bold rounded-full transition-all duration-150 ease-in-out ${
-                    isComplete
+                    canSubmit
                       ? 'bg-blue-500 text-white shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] hover:bg-blue-600 active:scale-[0.98] active:shadow-none'
                       : 'bg-gray-900 text-gray-600 shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] cursor-not-allowed opacity-50'
                   }`}
-                  disabled={!isComplete}
+                  disabled={!canSubmit}
                 >
                   Soumettre
                 </button>

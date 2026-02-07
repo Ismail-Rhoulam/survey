@@ -78,21 +78,8 @@ export default function Home() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    // Double-check that all required questions are answered before submitting
-    const allAnswered = (
-      formData.contenu > 0 &&
-      formData.intervenants > 0 &&
-      formData.organisation > 0 &&
-      formData.nps > 0
-    );
-
-    if (!allAnswered) {
-      alert('Veuillez répondre à toutes les questions obligatoires avant de soumettre.');
-      return;
-    }
+  const handleSubmit = async () => {
+    if (!canSubmit) return;
 
     const dataToSend = { ...formData, uid };
 
@@ -165,19 +152,7 @@ export default function Home() {
             />
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            onKeyDown={(e) => {
-              // Prevent Enter key from submitting the form unless it's on a button
-              if (e.key === 'Enter') {
-                const target = e.target as HTMLElement;
-                if (target.tagName !== 'BUTTON') {
-                  e.preventDefault();
-                }
-              }
-            }}
-            className="space-y-12"
-          >
+          <div className="space-y-12">
             <div key={currentQuestion.id}>
               <p className="mb-6 text-xl font-light text-gray-300">{currentQuestion.label}</p>
 
@@ -249,7 +224,8 @@ export default function Home() {
 
               {isLastQuestion ? (
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={handleSubmit}
                   className={`min-w-[120px] py-3 px-6 text-lg font-bold rounded-full transition-all duration-150 ease-in-out ${
                     canSubmit
                       ? 'bg-blue-500 text-white shadow-[6px_6px_12px_#0c0f1a,-6px_-6px_12px_#162134] hover:bg-blue-600 active:scale-[0.98] active:shadow-none'
@@ -273,7 +249,7 @@ export default function Home() {
                 </button>
               )}
             </div>
-          </form>
+          </div>
         </main>
       </div>
     </div>

@@ -81,6 +81,19 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Double-check that all required questions are answered before submitting
+    const allAnswered = (
+      formData.contenu > 0 &&
+      formData.intervenants > 0 &&
+      formData.organisation > 0 &&
+      formData.nps > 0
+    );
+
+    if (!allAnswered) {
+      alert('Veuillez répondre à toutes les questions obligatoires avant de soumettre.');
+      return;
+    }
+
     const dataToSend = { ...formData, uid };
 
     try {
@@ -160,6 +173,12 @@ export default function Home() {
                 <textarea
                   value={formData.free_text}
                   onChange={(e) => handleTextInput('free_text', e.target.value)}
+                  onKeyDown={(e) => {
+                    // Prevent form submission on Enter key
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.stopPropagation();
+                    }
+                  }}
                   placeholder="Votre réponse (optionnel)"
                   rows={6}
                   className="w-full p-4 rounded-2xl bg-gray-900 text-gray-200 border-2 border-gray-800
